@@ -1,5 +1,5 @@
-from asyncio.windows_events import NULL
 from re import X
+from PIL import Image
 import pandas as pd
 import streamlit as st
 import pickle
@@ -16,7 +16,7 @@ classifier = load_model()
 
 def main_page():
     st.title("Language Detection")
-    st.write("Detect any language from sentence")
+    st.write("Detect any languages from sentence (Up to 22 languages can be detected)")
 
     text = st.text_input("Input Text")
     X = np.array([text])
@@ -25,6 +25,10 @@ def main_page():
     if submit:
         lang = classifier.predict(X)
         st.subheader(f"Detected Language : {lang[0]}")
+
+        image = Image.open(f'./maps/{lang[0]}.png')
+
+        st.image(image, caption=f'{lang[0]} language distribution')
 
         country = pycountry.languages.get(name=lang[0])
 
